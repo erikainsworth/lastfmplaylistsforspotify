@@ -14,6 +14,9 @@ def authorize():
 		tk.config_to_file(config_file, conf + (token.refresh_token,))
 	return tk.Spotify(token)
 
+def get_user():
+	return spotify.current_user()	
+	
 def get_saved_albums():
 	albums = spotify.all_items(spotify.saved_albums())
 	return albums
@@ -28,34 +31,35 @@ def get_playlist(name):
 		if pl.name == name:
 			return pl.id
 	# playlist doesn't exist, so create
-	return create_play_list(name)
-	
-def get_user():
-	return spotify.current_user()
-	
-def add_to_playlist(playlist_id, uris):
-	spotify.playlist_add(playlist_id, uris, position=None)
+	return create_play_list(name)	
 
 def create_play_list(name):
 	pl = spotify.playlist_create(user.id, name, public=False, description='just testing')
 	return pl.id
+	
+def add_to_playlist(playlist_id, uris):
+	spotify.playlist_add(playlist_id, uris, position=None)
 
 
 if __name__ == __main__
-client_id = sys.argv[1]
-config_file = 'tekore.cfg'
-spotify = authorize()
-user = get_user()
-playlist_id = get_playlist('all songs')
-albums = get_saved_albums()
-for a in albums:
-	uri_list = get_album_track_uris(a.album)
-	print(uri_list)
-	add_to_playlist(playlist_id, uri_list)
+	client_id = sys.argv[1]
+	config_file = 'tekore.cfg'
+	spotify = authorize()
+	
+	user = get_user()
+	playlist_id = get_playlist('all songs')
+	
+	
+	albums = get_saved_albums()
+	for a in albums:
+		uri_list = get_album_track_uris(a.album)
+		print(uri_list)
+		add_to_playlist(playlist_id, uri_list)
 	
 # TODO:
 # Clear `all songs playlist, if it exists, before filling it `
 # Create Most played tracks based on lastFM
 # Create Least played tracks based on lastFM
 # Create recommended tracks based on lastFM
+# create loved tracks based on ListenBrainz
 # Migrate library to other user
