@@ -1,5 +1,6 @@
 import tekore as tk
 import sys
+import pylistenbrainz
 
 def authorize():
 	try:
@@ -40,24 +41,27 @@ def create_play_list(name):
 def add_to_playlist(playlist_id, uris):
 	spotify.playlist_add(playlist_id, uris, position=None)
 
+def clear_playlist(playlist_id):
+	spotify.playlist_clear(playlist_id)
+	
 
-if __name__ == __main__
-	client_id = sys.argv[1]
+if __name__ == '__main__':
+	if len(sys.argv) > 1:
+		client_id = sys.argv[1]
 	config_file = 'tekore.cfg'
-	spotify = authorize()
+	spotify = authorize()	
 	
 	user = get_user()
-	playlist_id = get_playlist('all songs')
-	
-	
-	albums = get_saved_albums()
-	for a in albums:
-		uri_list = get_album_track_uris(a.album)
-		print(uri_list)
-		add_to_playlist(playlist_id, uri_list)
+#	playlist_id = get_playlist('all songs')	
+#	albums = get_saved_albums()
+#	
+#	clear_playlist(playlist_id)
+#	for a in albums:
+#		uri_list = get_album_track_uris(a.album)
+#		print(uri_list)
+#		add_to_playlist(playlist_id, uri_list)
 	
 # TODO:
-# Clear `all songs playlist, if it exists, before filling it `
 # Create Most played tracks based on lastFM
 # Create Least played tracks based on lastFM
 # Create recommended tracks based on lastFM
