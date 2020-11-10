@@ -1,4 +1,5 @@
 import tekore as tk
+import sys
 
 def authorize():
 	try:
@@ -6,7 +7,6 @@ def authorize():
 		token = tk.refresh_pkce_token(conf[0], conf[3])
 		tk.config_to_file(config_file, conf[:3] + (token.refresh_token,))
 	except:
-		client_id = '10fed7a2f3b745b59d976d602bce0a02'
 		client_secret = 'your_client_secret'
 		redirect_uri = 'https://example.com/callback'   # Or your redirect uri
 		conf = (client_id, client_secret, redirect_uri)		
@@ -39,8 +39,10 @@ def add_to_playlist(playlist_id, uris):
 def create_play_list(name):
 	pl = spotify.playlist_create(user.id, name, public=False, description='just testing')
 	return pl.id
-	
-# echtwaar = id: 6ymLpUDv4ct4KznBvMQFxG
+
+
+if __name__ == __main__
+client_id = sys.argv[1]
 config_file = 'tekore.cfg'
 spotify = authorize()
 user = get_user()
@@ -50,3 +52,10 @@ for a in albums:
 	uri_list = get_album_track_uris(a.album)
 	print(uri_list)
 	add_to_playlist(playlist_id, uri_list)
+	
+# TODO:
+# Clear `all songs playlist, if it exists, before filling it `
+# Create Most played tracks based on lastFM
+# Create Least played tracks based on lastFM
+# Create recommended tracks based on lastFM
+# Migrate library to other user
