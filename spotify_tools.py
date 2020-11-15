@@ -1,5 +1,9 @@
-import tekore as tk
 import sys
+import os
+import itertools
+import tekore as tk
+import spt_authorize
+
 import pylistenbrainz
 
 def authorize():
@@ -43,23 +47,65 @@ def add_to_playlist(playlist_id, uris):
 
 def clear_playlist(playlist_id):
 	spotify.playlist_clear(playlist_id)
+
+def create_all_songs_playlist():
+	playlist_id = get_playlist('all songs')	
+	albums = get_saved_albums()
+	
+	clear_playlist(playlist_id)
+	for a in albums:
+		uri_list = get_album_track_uris(a.album)
+		print(uri_list)
+		add_to_playlist(playlist_id, uri_list)
+	
+def store_user_library():
+	saved_albums_file = os.path.sep.join([os.path.dirname(__file__), 'saved_albums.txt'])
+	album_gen = get_saved_albums()
+	#with open(saved_albums_file, 'w') as album_file:
+#		album_file.writelines(a.album.id + '\n' for a in album_gen)
+		
+	saved_playlist_file = os.path.sep.join([os.path.dirname(__file__), 'saved_playlists`.txt'])
+	playlist_gen = spotify.all_items(spotify.playlists(user.id))
+	for pl in playlist_gen:
+		playlist_items = spotify.all_items(spotify.playlist_items(pl.id))
+		print(list(itertools.islice(playlist_items, 1)))
+		
+	#with open(saved_playlist_file, 'w') as playlist_file:
+	#	playlist_file.writelines(pl.name + '\n' for pl in playlist_gen)
+	
+	# TODO 
+	# store tracks in playlists as json
+	# make configurable,, i.e. provide input to specify which items should be save (albums, tracks, playlists)
+	
 	
 
-if __name__ == '__main__':
-	if len(sys.argv) > 1:
-		client_id = sys.argv[1]
-	config_file = 'tekore.cfg'
-	spotify = authorize()	
+def set_user_library():
+	pass
 	
+	#TODO
+	# follow artists: https://tekore.readthedocs.io/en/stable/examples/artist_follower.html
+		
+		
+def get_lb_listens(name):
+	listens = lb_client.get_listens(username=name)
+	for listen in listens:
+		print("Track name:", listen.track_name)
+		print("Artist name:", listen.artist_name)
+		
+def get_lb_recordings(name):
+	listens = lb_client.get_user_recordings(username=name)
+	for listen in listens:
+		print(listen)
+
+if __name__ == '__main__':
+	spotify = spt_authorize.authorize()
 	user = get_user()
-#	playlist_id = get_playlist('all songs')	
-#	albums = get_saved_albums()
-#	
-#	clear_playlist(playlist_id)
-#	for a in albums:
-#		uri_list = get_album_track_uris(a.album)
-#		print(uri_list)
-#		add_to_playlist(playlist_id, uri_list)
+	print(dir(user))
+	#store_user_library()
+	
+	#lb_client = pylistenbrainz.ListenBrainz()
+	#get_lb_recordings('erik.ainsworth@gmail.com')
+
 	
 # TODO:
 # Create Most played tracks based on lastFM
