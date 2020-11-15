@@ -4,8 +4,6 @@ import itertools
 import tekore as tk
 import spt_authorize
 
-import pylistenbrainz
-
 def authorize():
 	try:
 		conf = tk.config_from_file(config_file, return_refresh=True)
@@ -86,21 +84,11 @@ def set_user_library():
 	# follow artists: https://tekore.readthedocs.io/en/stable/examples/artist_follower.html
 		
 		
-def get_lb_listens(name):
-	listens = lb_client.get_listens(username=name)
-	for listen in listens:
-		print("Track name:", listen.track_name)
-		print("Artist name:", listen.artist_name)
-		
-def get_lb_recordings(name):
-	listens = lb_client.get_user_recordings(username=name)
-	for listen in listens:
-		print(listen)
+
 
 if __name__ == '__main__':
 	spotify = spt_authorize.authorize()
 	user = get_user()
-	print(dir(user))
 	#store_user_library()
 	
 	#lb_client = pylistenbrainz.ListenBrainz()
